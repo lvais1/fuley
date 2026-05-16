@@ -392,7 +392,7 @@ export default function TrainPage() {
                 {!workoutDone ? (
                   <button
                     onClick={() => {
-                      completeWorkout();
+                      completeWorkout(undefined);
                       setWorkoutDone(true);
                     }}
                     disabled={result.status === 'EAT_FIRST'}

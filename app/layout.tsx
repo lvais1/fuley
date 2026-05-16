@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import PageTransition from "@/components/PageTransition";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +31,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} h-full`}>
       <body className="h-full antialiased overflow-x-hidden">
-        <div className="relative min-h-full max-w-md mx-auto">
-          <PageTransition>{children}</PageTransition>
-        </div>
-      </body>
+        <ThemeProvider>
+          <div className="relative min-h-full max-w-md mx-auto">
+            <PageTransition>{children}</PageTransition>
+          </div>
+        </ThemeProvider>
+      {/* impeccable-live-start */}
+<script src="http://localhost:8400/live.js"></script>
+{/* impeccable-live-end */}
+</body>
     </html>
   );
 }

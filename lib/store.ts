@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { AppState, UserProfile, FoodEntry, WorkoutSession, WorkoutType, ReadinessResult, AppStats } from '@/types';
+import type { AppState, AppSettings, UserProfile, FoodEntry, WorkoutSession, WorkoutType, ReadinessResult, AppStats, FuelQuery } from '@/types';
 import { getTodayISO } from '@/lib/utils';
 
 const DEFAULT_STATS: AppStats = {
@@ -14,6 +14,24 @@ const DEFAULT_STATS: AppStats = {
   weeklyAvg: [],
 };
 
+const DEFAULT_SETTINGS: AppSettings = {
+  theme: 'dark',
+  language: 'en',
+  notifications: {
+    workoutReminders: true,
+    preMealReminders: true,
+    hydrationReminders: false,
+    workoutWindowAlerts: true,
+    aiReadinessAlerts: true,
+  },
+  coaching: {
+    tone: 'balanced',
+    aggressiveReminders: false,
+    recommendationFrequency: 'medium',
+    insightDepth: 'detailed',
+  },
+};
+
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
@@ -23,9 +41,10 @@ export const useAppStore = create<AppState>()(
       todayWorkoutType: 'push',
       lastReadiness: null,
       stats: DEFAULT_STATS,
+      settings: DEFAULT_SETTINGS,
+      fuelHistory: [],
 
       setUser: (user: UserProfile) => {
-        // Initialise today's workout type to match the split
         const defaultType: WorkoutType = user.trainingSplit === 'full_body' ? 'full_body' : 'push';
         set({ user, todayWorkoutType: defaultType });
       },
@@ -48,15 +67,15 @@ export const useAppStore = create<AppState>()(
         set({ stats });
       },
 
-      completeWorkout: (id: string) =>
+      completeWorkout: (id?: string) =>
         set(state => {
-          const sessions = state.workoutSessions.map(s =>
-            s.id === id ? { ...s, completed: true } : s
-          );
+          const sessions = id
+            ? state.workoutSessions.map(s => s.id === id ? { ...s, completed: true } : s)
+            : state.workoutSessions;
           const stats = { ...state.stats };
           stats.totalWorkouts += 1;
-          const justCompleted = sessions.find(s => s.id === id);
-          if (justCompleted && justCompleted.readinessScore >= 75) {
+          const justCompleted = id ? sessions.find(s => s.id === id) : null;
+          if (!id || (justCompleted && justCompleted.readinessScore >= 75)) {
             stats.perfectFueledCount += 1;
           }
           stats.currentStreak += 1;
@@ -79,7 +98,35 @@ export const useAppStore = create<AppState>()(
         todayWorkoutType: 'push',
         lastReadiness: null,
         stats: DEFAULT_STATS,
+        settings: DEFAULT_SETTINGS,
+        fuelHistory: [],
       }),
+
+      updateSettings: (newSettings: Partial<AppSettings>) =>
+        set(state => ({
+          settings: {
+            ...state.settings,
+            ...newSettings,
+            notifications: {
+              ...state.settings.notifications,
+              ...(newSettings.notifications || {}),
+            },
+            coaching: {
+              ...state.settings.coaching,
+              ...(newSettings.coaching || {}),
+            },
+          },
+        })),
+
+      updateProfile: (profile: Partial<UserProfile>) =>
+        set(state => ({
+          user: state.user ? { ...state.user, ...profile } : state.user,
+        })),
+
+      addFuelQuery: (query: FuelQuery) =>
+        set(state => ({
+          fuelHistory: [query, ...state.fuelHistory].slice(0, 20),
+        })),
     }),
     {
       name: 'fuelready-store',
@@ -91,6 +138,8 @@ export const useAppStore = create<AppState>()(
         todayWorkoutType: state.todayWorkoutType,
         lastReadiness: state.lastReadiness,
         stats: state.stats,
+        settings: state.settings,
+        fuelHistory: state.fuelHistory,
       }),
     }
   )

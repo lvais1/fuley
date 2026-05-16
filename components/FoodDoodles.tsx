@@ -141,6 +141,66 @@ export function FuelyMark({ size = 40, mood = 'happy' }: { size?: number; mood?:
   );
 }
 
+// ─── Workout icons ───────────────────────────────────────────────
+
+export function PushIcon({ size = 32 }: DoodleProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <path d="M16 4l-2 4 2 6 2-6-2-4z" fill="#00FF94" opacity="0.7"/>
+      <rect x="4" y="14" width="24" height="4" rx="2" fill="#00FF94" opacity="0.9"/>
+      <rect x="2" y="11" width="3" height="10" rx="1" fill="#00FF94"/>
+      <rect x="27" y="11" width="3" height="10" rx="1" fill="#00FF94"/>
+    </svg>
+  );
+}
+
+export function PullIcon({ size = 32 }: DoodleProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <path d="M6 4h20" stroke="#FF6B35" strokeWidth="2.4" strokeLinecap="round"/>
+      <circle cx="16" cy="10" r="2.5" fill="#FF6B35"/>
+      <path d="M16 12v6M12 14l4 4 4-4M14 28l2-6 2 6" stroke="#FF6B35" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+}
+
+export function LegsIcon({ size = 32 }: DoodleProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="6" r="3" fill="#FF3B5C"/>
+      <path d="M16 10v6l-4 8M16 16l4 8M11 24l-1 4M21 24l1 4" stroke="#FF3B5C" strokeWidth="2.4" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
+
+export function FullBodyIcon({ size = 32 }: DoodleProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="6" r="3" fill="#00D4FF"/>
+      <path d="M16 10v10M8 14l8-2 8 2M12 28l4-8 4 8" stroke="#00D4FF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+}
+
+export function CardioIcon({ size = 32 }: DoodleProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <path d="M4 16l5 0 2-5 4 10 3-7 2 2h8" stroke="#FF3B5C" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+}
+
+export function WorkoutIcon({ type, size = 16 }: { type: string; size?: number }) {
+  const map: Record<string, React.ReactNode> = {
+    push:      <PushIcon size={size}/>,
+    pull:      <PullIcon size={size}/>,
+    legs:      <LegsIcon size={size}/>,
+    full_body: <FullBodyIcon size={size}/>,
+    cardio:    <CardioIcon size={size}/>,
+  };
+  return <>{map[type] || map.full_body}</>;
+}
+
 export function pickArt(text: string): React.ComponentType<DoodleProps> {
   const t = text.toLowerCase();
   if (/(toast|bread)/.test(t)) return Toast;

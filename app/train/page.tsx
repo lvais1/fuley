@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Zap, ChevronDown, ChevronUp, Share2, Clock, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Zap, ChevronDown, Clock, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import ReadinessOrb from '@/components/ReadinessOrb';
@@ -42,6 +42,30 @@ const STATUS_COLOR: Record<ReadinessStatus, string> = {
   EAT_FIRST: 'var(--color-red)',
 };
 
+const STATUS_COLOR_RAW: Record<ReadinessStatus, string> = {
+  READY: '#00FF94',
+  WAIT: '#FF6B35',
+  EAT_FIRST: '#FF3B5C',
+};
+
+const BURST_PARTICLES = [
+  { angle: 0,   dist: 68, size: 5 },
+  { angle: 24,  dist: 55, size: 3 },
+  { angle: 48,  dist: 76, size: 4 },
+  { angle: 72,  dist: 62, size: 6 },
+  { angle: 96,  dist: 72, size: 3 },
+  { angle: 120, dist: 58, size: 5 },
+  { angle: 144, dist: 80, size: 4 },
+  { angle: 168, dist: 65, size: 3 },
+  { angle: 192, dist: 70, size: 6 },
+  { angle: 216, dist: 55, size: 4 },
+  { angle: 240, dist: 76, size: 3 },
+  { angle: 264, dist: 62, size: 5 },
+  { angle: 288, dist: 72, size: 4 },
+  { angle: 312, dist: 58, size: 3 },
+  { angle: 336, dist: 68, size: 5 },
+];
+
 export default function TrainPage() {
   const router = useRouter();
   const { user, foodEntries, todayWorkoutType, lastReadiness, setLastReadiness, completeWorkout, stats } = useAppStore();
@@ -74,11 +98,11 @@ export default function TrainPage() {
     setAnalysisPhase(0);
 
     for (let i = 0; i < ANALYSIS_PHASES.length; i++) {
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 250));
       setAnalysisPhase(i);
     }
 
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 150));
     const res = calculateReadiness(foodEntries, selectedType, user);
     setResult(res);
     setLastReadiness(res);
@@ -173,6 +197,7 @@ export default function TrainPage() {
 
               <motion.button
                 whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.01 }}
                 onClick={runAnalysis}
                 className="w-full h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2"
                 style={{
@@ -250,9 +275,9 @@ export default function TrainPage() {
           {result && !isAnalyzing && (
             <motion.div
               key="result"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               {/* Orb */}
               <div className="flex justify-center mb-5">
@@ -367,6 +392,7 @@ export default function TrainPage() {
                 {!workoutDone ? (
                   <button
                     onClick={() => {
+                      completeWorkout();
                       setWorkoutDone(true);
                     }}
                     disabled={result.status === 'EAT_FIRST'}
@@ -382,8 +408,9 @@ export default function TrainPage() {
                   </button>
                 ) : (
                   <motion.div
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
+                    initial={{ scale: 0.85, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     className="flex-1 h-12 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"
                     style={{ background: 'rgba(0,255,148,0.12)', color: 'var(--color-green)', border: '1px solid rgba(0,255,148,0.3)' }}
                   >
@@ -406,6 +433,37 @@ export default function TrainPage() {
       </div>
 
       <Navigation />
+
+      {workoutDone && result && (
+        <WorkoutCelebration color={STATUS_COLOR_RAW[result.status]} />
+      )}
+    </div>
+  );
+}
+
+function WorkoutCelebration({ color }: { color: string }) {
+  return (
+    <div className="fixed inset-0 pointer-events-none flex items-center justify-center z-40">
+      {BURST_PARTICLES.map((p, i) => {
+        const rad = (p.angle * Math.PI) / 180;
+        const tx = Math.cos(rad) * p.dist;
+        const ty = Math.sin(rad) * p.dist;
+        return (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: p.size,
+              height: p.size,
+              background: color,
+              boxShadow: `0 0 ${p.size + 3}px ${color}`,
+            }}
+            initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
+            animate={{ x: tx, y: ty, scale: 1, opacity: 0 }}
+            transition={{ duration: 0.65, delay: i * 0.018, ease: [0.25, 1, 0.5, 1] }}
+          />
+        );
+      })}
     </div>
   );
 }

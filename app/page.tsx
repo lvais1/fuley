@@ -53,7 +53,7 @@ export default function RootPage() {
           className="text-center"
         >
           <h1 className="text-3xl font-black tracking-tight">
-            <span className="text-gradient-green">Fuel</span>
+            <span style={{ color: 'var(--color-green)' }}>Fuel</span>
             <span style={{ color: 'var(--color-text-1)' }}>Ready</span>
           </h1>
           <p className="text-sm mt-1 font-medium" style={{ color: 'var(--color-text-3)' }}>

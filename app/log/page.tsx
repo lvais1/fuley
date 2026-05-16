@@ -45,7 +45,7 @@ export default function LogPage() {
 
     // Simulate progressive analysis
     for (let i = 0; i < ANALYSIS_MESSAGES.length; i++) {
-      await new Promise(r => setTimeout(r, 350));
+      await new Promise(r => setTimeout(r, 175));
       setAnalysisStep(i);
     }
 

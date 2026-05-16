@@ -266,7 +266,7 @@ function WelcomeScreen({ onStart }: { onStart: () => void }) {
           >
             Train
             <br />
-            <span className="text-gradient-hero">smarter.</span>
+            <span style={{ color: 'var(--color-green)' }}>smarter.</span>
           </motion.h1>
 
           <motion.p
@@ -666,7 +666,7 @@ function PPLVisual() {
               style={{ height: b.h, background: `linear-gradient(to top, ${b.color}22, ${b.color})` }}
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
-              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
             />
           </div>
           <span className="text-[10px] font-black" style={{ color: b.color }}>{b.label}</span>
@@ -877,19 +877,19 @@ function LoadingScreen({ onComplete, data }: { onComplete: () => void; data: ODa
   useEffect(() => {
     // Climb percentage
     const controls = animate(pctVal, 100, {
-      duration: LOADING_MSGS.length * 0.8,
+      duration: LOADING_MSGS.length * 0.4,
       ease: 'easeInOut',
       onUpdate: v => setPct(Math.round(v)),
     });
 
     // Cycle messages
     const intervals = LOADING_MSGS.map((_, i) =>
-      setTimeout(() => setMsgIdx(i), i * 800)
+      setTimeout(() => setMsgIdx(i), i * 400)
     );
 
     const doneTimer = setTimeout(() => {
       setDone(true);
-    }, LOADING_MSGS.length * 800 + 400);
+    }, LOADING_MSGS.length * 400 + 200);
 
     return () => {
       controls.stop();

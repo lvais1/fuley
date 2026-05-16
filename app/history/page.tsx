@@ -148,7 +148,7 @@ export default function HistoryPage() {
                       key={b.id}
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.35 + i * 0.08, type: 'spring', stiffness: 200 }}
+                      transition={{ delay: 0.35 + i * 0.08, duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
                       className="flex items-center gap-2 px-3 py-2 rounded-2xl"
                       style={{ background: 'rgba(0,255,148,0.08)', border: '1px solid rgba(0,255,148,0.2)' }}
                     >

@@ -11,7 +11,8 @@ import MealCard from '@/components/MealCard';
 import BreakdownCard from '@/components/BreakdownCard';
 import { useAppStore } from '@/lib/store';
 import { calculateReadiness } from '@/lib/readiness-engine';
-import { getWorkoutLabel, getWorkoutEmoji, minutesSince } from '@/lib/utils';
+import { getWorkoutLabel, minutesSince } from '@/lib/utils';
+import { WorkoutIcon } from '@/components/FoodDoodles';
 import type { ReadinessResult, WorkoutType } from '@/types';
 
 const PPL_TYPES: WorkoutType[]       = ['push', 'pull', 'legs'];
@@ -73,7 +74,7 @@ export default function DashboardPage() {
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </p>
             <h1 className="text-xl font-black mt-0.5">
-              Hey, <span className="text-gradient-green">{user.name}</span>{' '}
+              Hey, <span style={{ color: 'var(--color-green)' }}>{user.name}</span>{' '}
               <span className="inline-block animate-wave">👋</span>
             </h1>
           </div>
@@ -101,7 +102,7 @@ export default function DashboardPage() {
                   color: todayWorkoutType === type ? 'var(--color-green)' : 'var(--color-text-2)',
                 }}
               >
-                <span>{getWorkoutEmoji(type)}</span>
+                <WorkoutIcon type={type} size={16}/>
                 {getWorkoutLabel(type)}
               </button>
             ))}
@@ -187,6 +188,7 @@ export default function DashboardPage() {
           <Link href="/train">
             <motion.div
               whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.01 }}
               className="w-full h-14 rounded-2xl flex items-center justify-center gap-2.5 font-bold text-base"
               style={{
                 background: 'var(--color-green)',

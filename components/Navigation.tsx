@@ -6,10 +6,10 @@ import { motion } from 'framer-motion';
 import { Home, UtensilsCrossed, Zap, History } from 'lucide-react';
 
 const TABS = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/log', icon: UtensilsCrossed, label: 'Log' },
-  { href: '/train', icon: Zap, label: 'Train' },
-  { href: '/history', icon: History, label: 'History' },
+  { href: '/dashboard', icon: Home,           label: 'Home' },
+  { href: '/log',       icon: UtensilsCrossed, label: 'Log' },
+  { href: '/train',     icon: Zap,             label: 'Train' },
+  { href: '/history',   icon: History,          label: 'History' },
 ];
 
 export default function Navigation() {
@@ -38,17 +38,35 @@ export default function Navigation() {
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-                <Icon
-                  size={22}
-                  className="relative z-10 transition-colors"
-                  style={{ color: active ? 'var(--color-green)' : 'var(--color-text-3)' }}
-                />
+
+                {/* Icon with drop-shadow on active */}
+                <div
+                  className="relative z-10 transition-all"
+                  style={{
+                    color: active ? 'var(--color-green)' : 'var(--color-text-3)',
+                    filter: active ? 'drop-shadow(0 0 6px rgba(0,255,148,0.65))' : 'none',
+                    transform: active ? 'translateY(-1px)' : 'translateY(0)',
+                  }}
+                >
+                  <Icon size={22} />
+                </div>
+
                 <span
                   className="relative z-10 text-[10px] font-medium transition-colors"
                   style={{ color: active ? 'var(--color-green)' : 'var(--color-text-3)' }}
                 >
                   {label}
                 </span>
+
+                {/* Active dot indicator */}
+                {active && (
+                  <motion.div
+                    layoutId="nav-dot"
+                    className="relative z-10 rounded-full"
+                    style={{ width: 4, height: 4, background: 'var(--color-green)' }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
               </Link>
             );
           })}

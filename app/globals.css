@@ -309,3 +309,47 @@ input:focus, textarea:focus {
   outline: none;
   box-shadow: 0 0 0 1px rgba(0,255,148,0.4), 0 0 12px rgba(0,255,148,0.12);
 }
+
+/* ─── Wave animation for greeting emoji ─── */
+@keyframes fuely-wave {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(14deg); }
+  40%  { transform: rotate(-8deg); }
+  60%  { transform: rotate(14deg); }
+  80%  { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+.animate-wave {
+  animation: fuely-wave 1.6s ease-in-out infinite;
+  transform-origin: 70% 70%;
+  display: inline-block;
+}
+
+/* ─── Confetti burst ─── */
+@keyframes fuely-confetti {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--cx, 0px), var(--cy, -100px)) rotate(var(--cr, 360deg)); opacity: 0; }
+}
+
+/* ─── Particle burst ─── */
+@keyframes fuely-particle {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--px, 0px), var(--py, -60px)) scale(0); opacity: 0; }
+}
+
+/* ─── Glow pulse per status (box-shadow variant) ─── */
+@keyframes fuely-glow-pulse-green {
+  0%, 100% { box-shadow: 0 0 24px rgba(0,255,148,0.3), 0 0 80px rgba(0,255,148,0.12); }
+  50%       { box-shadow: 0 0 36px rgba(0,255,148,0.5), 0 0 100px rgba(0,255,148,0.18); }
+}
+@keyframes fuely-glow-pulse-orange {
+  0%, 100% { box-shadow: 0 0 24px rgba(255,107,53,0.3), 0 0 80px rgba(255,107,53,0.12); }
+  50%       { box-shadow: 0 0 36px rgba(255,107,53,0.5), 0 0 100px rgba(255,107,53,0.18); }
+}
+@keyframes fuely-glow-pulse-red {
+  0%, 100% { box-shadow: 0 0 24px rgba(255,59,92,0.3), 0 0 80px rgba(255,59,92,0.12); }
+  50%       { box-shadow: 0 0 36px rgba(255,59,92,0.5), 0 0 100px rgba(255,59,92,0.18); }
+}
+.glow-pulse-green  { animation: fuely-glow-pulse-green  2.6s ease-in-out infinite; }
+.glow-pulse-orange { animation: fuely-glow-pulse-orange 2.6s ease-in-out infinite; }
+.glow-pulse-red    { animation: fuely-glow-pulse-red    1.9s ease-in-out infinite; }
